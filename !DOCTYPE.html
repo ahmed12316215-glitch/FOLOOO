@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>منظم المهام - تصميم احترافي</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Cairo', 'Segoe UI', 'Tahoma', sans-serif;
+        background: #ded7c5;
+        direction: rtl;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #ded7c5;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #525d63;
+        border-radius: 10px;
+    }
+
+    .app-container {
+        max-width: 450px;
+        margin: 0 auto;
+        background: #ded7c5;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Header */
+    .header {
+        background: linear-gradient(135deg, #2a353b 0%, #202028 100%);
+        color: #ded7c5;
+        padding: 25px 20px;
+        border-radius: 0 0 30px 30px;
+    }
+
+    .greeting {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .user-name {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .tasks-pending {
+        font-size: 0.85rem;
+        opacity: 0.85;
+    }
+
+    .header-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    .stat-circle {
+        flex: 1;
+        background: rgba(222,215,197,0.15);
+        border-radius: 20px;
+        padding: 12px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        opacity: 0.85;
+    }
+
+    /* Quick Stats Row */
+    .quick-stats {
+        display: flex;
+        justify-content: space-around;
+        background: #ffffff;
+        margin: -20px 15px 20px 15px;
+        padding: 15px;
+        border-radius: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .quick-stat {
+        text-align: center;
+        flex: 1;
+    }
+
+    .quick-stat-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2a353b;
+    }
+
+    .quick-stat-label {
+        font-size: 0.7rem;
+        color: #525d63;
+    }
+
+    /* Section Title */
+    .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+        margin: 20px 0 15px 0;
+    }
+
+    .section-title h3 {
+        font-size: 1rem;
+        color: #2a353b;
+        font-weight: 600;
+    }
+
+    .section-title a {
+        font-size: 0.75rem;
+        color: #525d63;
+        text-decoration: none;
+    }
+
+    /* Task Card */
+    .task-card {
+        background: #ffffff;
+        margin: 0 15px 12px 15px;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border-left: 3px solid #2a353b;
+        position: relative;
+    }
+
+    .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(42,53,59,0.15);
+    }
+
+    .task-card.completed {
+        opacity: 0.6;
+        background: #f5f5f0;
+        border-left-color: #525d63;
+    }
+
+    .task-card.delayed {
+        border-left-color: #c9a03d;
+        background: #fef8e7;
+    }
+
+    .task-card.running {
+        border-left-color: #2a353b;
+        background: #eef2f0;
+    }
+
+    .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .task-name {
+        font-weight: 600;
+        color: #202028;
+        font-size: 0.95rem;
+    }
+
+    .task-time {
+        font-size: 0.7rem;
+        color: #525d63;
+        background: #ded7c5;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    .task-time.delayed {
+        background: #fef3c7;
+        color: #c9a03d;
+    }
+
+    .task-description {
+        font-size: 0.75rem;
+        color: #525d63;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .task-meta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 0.7rem;
+        color: #9ca3af;
+    }
+
+    .task-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .task-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .btn-start {
+        background: #2a353b;
+        color: #ded7c5;
+    }
+
+    .btn-start:hover {
+        background: #202028;
+        transform: scale(0.98);
+    }
+
+    .btn-complete {
+        background: #525d63;
+        color: #ded7c5;
+    }
+
+    .btn-complete:hover {
+        background: #2a353b;
+    }
+
+    .btn-undo {
+        background: #c9a03d;
+        color: #ffffff;
+    }
+
+    .btn-edit {
+        background: #525d63;
+        color: #ded7c5;
+    }
+
+    .btn-delete {
+        background: #8b5e5e;
+        color: #ffffff;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #525d63;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+
+    /* Tabs */
+    .tabs {
+        display: flex;
+        background: #ffffff;
+        padding: 8px 15px;
+        gap: 5px;
+        border-bottom: 1px solid #ded7c5;
+        position: sticky;
+        top: 0;
+        z-index: 99;
+    }
+
+    .tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        background: none;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.3s;
+        font-family: inherit;
+        color: #525d63;
+    }
+
+    .tab.active {
+        background: #2a353b;
+        color: #ded7c5;
+    }
+
+    /* Content */
+    .content {
+        padding-bottom: 80px;
+    }
+
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.3s;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Timeline */
+    .daily-timeline {
+        background: #ffffff;
+        margin: 0 15px 15px 15px;
+        padding: 15px;
+        border-radius: 20px;
+    }
+
+    .timeline-title {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2a353b;
+    }
+
+    .timeline-hours {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .timeline-hour {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        border-radius: 12px;
+        background: #ded7c5;
+    }
+
+    .hour-label {
+        width: 55px;
+        font-weight: 600;
+        color: #2a353b;
+        font-size: 0.75rem;
+    }
+
+    .hour-tasks {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .hour-task-badge {
+        background: linear-gradient(135deg, #2a353b 0%, #525d63 100%);
+        color: #ded7c5;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        cursor: pointer;
+    }
+
+    .hour-task-badge.completed {
+        opacity: 0.5;
+    }
+
+    /* Calendar - Fixed */
+    .calendar-container {
+        background: #ffffff;
+        margin: 0 15px 15px 15px;
+        padding: 15px;
+        border-radius: 20px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .calendar-nav {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 10px;
+        color: #2a353b;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+
+    .calendar-weekday {
+        text-align: center;
+        padding: 10px 5px;
+        font-weight: 600;
+        color: #2a353b;
+        font-size: 0.7rem;
+        background: #ded7c5;
+        border-radius: 12px;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f0;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        color: #202028;
+    }
+
+    .calendar-day:hover {
+        background: #e0dbce;
+        transform: scale(1.02);
+    }
+
+    .calendar-day.selected {
+        background: #2a353b;
+        color: #ded7c5;
+    }
+
+    .calendar-day.has-tasks {
+        border: 2px solid #525d63;
+        position: relative;
+    }
+
+    .calendar-day.has-tasks::after {
+        content: "●";
+        position: absolute;
+        bottom: 2px;
+        font-size: 8px;
+        color: #2a353b;
+    }
+
+    .calendar-day.selected.has-tasks::after {
+        color: #ded7c5;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin: 0 15px 15px 15px;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2a353b;
+    }
+
+    /* Settings */
+    .setting-item {
+        background: #ffffff;
+        margin: 0 15px 10px 15px;
+        padding: 15px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .toggle {
+        width: 48px;
+        height: 24px;
+        background: #ded7c5;
+        border-radius: 12px;
+        cursor: pointer;
+        position: relative;
+        transition: 0.3s;
+    }
+
+    .toggle.active {
+        background: #2a353b;
+    }
+
+    .toggle::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        background: #ffffff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        transition: 0.3s;
+    }
+
+    .toggle.active::after {
+        left: 24px;
+    }
+
+    /* FAB */
+    .fab {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #2a353b 0%, #525d63 100%);
+        color: #ded7c5;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(42,53,59,0.4);
+        transition: all 0.2s;
+        z-index: 98;
+    }
+
+    .fab:active {
+        transform: scale(0.95);
+    }
+
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .counter-modal {
+        background: linear-gradient(135deg, #2a353b 0%, #202028 100%);
+        border-radius: 40px;
+        padding: 35px;
+        text-align: center;
+        min-width: 280px;
+    }
+
+    .counter-time {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: #ded7c5;
+        font-family: monospace;
+        margin: 20px 0;
+    }
+
+    .counter-controls {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .counter-btn {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Add/Edit Modal */
+    .form-modal {
+        background: #ffffff;
+        border-radius: 30px;
+        padding: 25px;
+        width: 90%;
+        max-width: 380px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #202028;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ded7c5;
+        border-radius: 15px;
+        font-family: inherit;
+        font-size: 0.85rem;
+        background: #ffffff;
+    }
+
+    .days-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+    }
+
+    .repeat-options {
+        display: flex;
+        gap: 10px;
+    }
+
+    .repeat-option {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ded7c5;
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+        background: #ded7c5;
+        color: #202028;
+    }
+
+    .repeat-option.selected {
+        background: #2a353b;
+        color: #ded7c5;
+        border-color: #2a353b;
+    }
+
+    /* Notification */
+    .notification-toast {
+        position: fixed;
+        bottom: 90px;
+        left: 20px;
+        right: 20px;
+        background: #202028;
+        color: #ded7c5;
+        padding: 12px;
+        border-radius: 15px;
+        text-align: center;
+        z-index: 2000;
+        display: none;
+        font-size: 0.85rem;
+    }
+
+    .notification-toast.show {
+        display: block;
+        animation: slideUp 0.3s;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Running badge */
+    .running-badge {
+        background: #c9a03d;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.6rem;
+        margin-right: 8px;
+        color: #ffffff;
+    }
+
+    /* ==================== TOUR GUIDE PREMIUM ==================== */
+    .tour-overlay-premium {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(32,32,40,0.95);
+        backdrop-filter: blur(8px);
+        z-index: 10000;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .tour-overlay-premium.active {
+        display: block;
+        animation: fadeInOverlay 0.5s forwards;
+    }
+
+    @keyframes fadeInOverlay {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .tour-highlight-premium {
+        position: absolute;
+        border-radius: 24px;
+        box-shadow: 0 0 0 9999px rgba(32,32,40,0.85), 0 0 0 4px rgba(222,215,197,0.5), 0 0 0 8px rgba(42,53,59,0.6);
+        transition: all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+        z-index: 10001;
+        animation: pulseGlow 1.5s infinite;
+    }
+
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 9999px rgba(32,32,40,0.85), 0 0 0 4px rgba(222,215,197,0.5), 0 0 0 8px rgba(42,53,59,0.6); }
+        50% { box-shadow: 0 0 0 9999px rgba(32,32,40,0.85), 0 0 0 6px rgba(222,215,197,0.7), 0 0 0 12px rgba(42,53,59,0.8); }
+        100% { box-shadow: 0 0 0 9999px rgba(32,32,40,0.85), 0 0 0 4px rgba(222,215,197,0.5), 0 0 0 8px rgba(42,53,59,0.6); }
+    }
+
+    .tour-tooltip-premium {
+        position: absolute;
+        background: linear-gradient(135deg, #2a353b 0%, #202028 100%);
+        border-radius: 28px;
+        padding: 24px;
+        max-width: 300px;
+        z-index: 10002;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        animation: tooltipSlideIn 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    @keyframes tooltipSlideIn {
+        from {
+            transform: translateY(30px) scale(0.9);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .tour-icon-premium {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #525d63 0%, #2a353b 100%);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 2rem;
+        animation: iconBounce 0.6s ease;
+    }
+
+    @keyframes iconBounce {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    .tour-title-premium {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #ded7c5;
+        margin-bottom: 12px;
+    }
+
+    .tour-description-premium {
+        font-size: 0.95rem;
+        color: #ded7c5;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+
+    .tour-progress-premium {
+        height: 4px;
+        background: rgba(222,215,197,0.3);
+        border-radius: 2px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .tour-progress-fill-premium {
+        height: 100%;
+        background: linear-gradient(90deg, #ded7c5 0%, #525d63 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .tour-buttons-premium {
+        display: flex;
+        gap: 12px;
+    }
+
+    .tour-btn-premium {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .tour-btn-next-premium {
+        background: #ded7c5;
+        color: #2a353b;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .tour-btn-next-premium:hover {
+        transform: translateY(-2px);
+        background: #ffffff;
+    }
+
+    .tour-btn-skip-premium {
+        background: rgba(222,215,197,0.2);
+        color: #ded7c5;
+    }
+
+    .tour-btn-skip-premium:hover {
+        background: rgba(222,215,197,0.3);
+    }
+
+    .tour-dots-premium {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .tour-dot-premium {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(222,215,197,0.4);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .tour-dot-premium.active {
+        width: 24px;
+        background: #ded7c5;
+    }
+
+    .tour-dot-premium:hover {
+        transform: scale(1.2);
+    }
+
+    /* Floating particles animation */
+    .tour-particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(222,215,197,0.6);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: floatParticle 2s ease-out forwards;
+        z-index: 10003;
+    }
+
+    @keyframes floatParticle {
+        0% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.8;
+        }
+        100% {
+            transform: translate(var(--tx), var(--ty)) scale(0);
+            opacity: 0;
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="greeting">مرحباً 👋</div>
+    <div class="user-name">مستخدمنا العزيز</div>
+    <div class="tasks-pending" id="pendingTasksText">لديك 0 مهام معلقة</div>
+
+    <div class="header-stats">
+      <div class="stat-circle">
+        <div class="stat-number" id="statCompleted">0</div>
+        <div class="stat-label">مكتملة</div>
+      </div>
+      <div class="stat-circle">
+        <div class="stat-number" id="statInProgress">0</div>
+        <div class="stat-label">قيد التنفيذ</div>
+      </div>
+      <div class="stat-circle">
+        <div class="stat-number" id="statDelayed">0</div>
+        <div class="stat-label">متأخرة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <div class="quick-stat">
+      <div class="quick-stat-value" id="quickTotal">0</div>
+      <div class="quick-stat-label">إجمالي المهام</div>
+    </div>
+    <div class="quick-stat">
+      <div class="quick-stat-value" id="quickStreak">0</div>
+      <div class="quick-stat-label">أيام متتالية</div>
+    </div>
+    <div class="quick-stat">
+      <div class="quick-stat-value" id="quickRate">0%</div>
+      <div class="quick-stat-label">نسبة الإنجاز</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="tasks" onclick="switchTab('tasks')">📋 المهام</button>
+    <button class="tab" data-tab="daily" onclick="switchTab('daily')">📅 اليوم</button>
+    <button class="tab" data-tab="calendar" onclick="switchTab('calendar')">📆 التقويم</button>
+    <button class="tab" data-tab="stats" onclick="switchTab('stats')">📊 إحصائيات</button>
+    <button class="tab" data-tab="settings" onclick="switchTab('settings')">⚙️ إعدادات</button>
+  </div>
+
+  <div class="content">
+    <!-- Tasks Tab -->
+    <div id="tasks-tab" class="tab-content active">
+      <div class="section-title">
+        <h3>🗂️ مهام اليوم</h3>
+        <a href="#" onclick="openAddTaskModal(); return false;">+ إضافة مهمة</a>
+      </div>
+      <div id="tasksList"></div>
+    </div>
+
+    <!-- Daily Timeline Tab -->
+    <div id="daily-tab" class="tab-content">
+      <div class="daily-timeline">
+        <div class="timeline-title">⏰ الجدول الزمني لليوم</div>
+        <div class="timeline-hours" id="timelineHours"></div>
+      </div>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div id="calendar-tab" class="tab-content">
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="calendar-nav" onclick="changeMonth(-1)">◀</button>
+          <h3 id="monthYear"></h3>
+          <button class="calendar-nav" onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+      <div id="selectedDayTasks"></div>
+    </div>
+
+    <!-- Stats Tab -->
+    <div id="stats-tab" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalTasks">0</div>
+          <div class="stat-label">إجمالي المهام</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCompletedTasks">0</div>
+          <div class="stat-label">مكتملة اليوم</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statDelayedTasks">0</div>
+          <div class="stat-label">مهام متأخرة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statStreakCount">0</div>
+          <div class="stat-label">أيام متتالية</div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statCompletionRate">0%</div>
+          <div class="stat-label">نسبة الإنجاز</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statRemaining">0</div>
+          <div class="stat-label">مهام متبقية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div id="settings-tab" class="tab-content">
+      <div class="setting-item">
+        <span>🔊 الأصوات</span>
+        <div class="toggle" id="soundToggle" onclick="toggleSound()"></div>
+      </div>
+      <div class="setting-item">
+        <span>🔔 الإشعارات</span>
+        <div class="toggle" id="notifToggle" onclick="toggleNotifications()"></div>
+      </div>
+      <div class="setting-item">
+        <span>📱 إشعارات الخلفية</span>
+        <div class="toggle" id="bgNotifToggle" onclick="toggleBackgroundNotifications()"></div>
+      </div>
+      <div class="setting-item">
+        <span>🎓 إعادة الجولة التعريفية</span>
+        <button class="btn btn-start" onclick="restartTour()" style="padding: 8px 15px;">إعادة التشغيل</button>
+      </div>
+      <button class="btn btn-delete" onclick="resetAllData()" style="margin: 15px; width: calc(100% - 30px);">🗑️ حذف جميع البيانات</button>
+    </div>
+  </div>
+
+  <button class="fab" onclick="openAddTaskModal()">+</button>
+</div>
+
+<!-- Counter Modal -->
+<div id="counterModal" class="modal-overlay">
+  <div class="counter-modal">
+    <div class="counter-task-name" id="counterTaskName" style="color:#ded7c5; margin-bottom:15px;"></div>
+    <div class="counter-time" id="counterTime">00:00</div>
+    <div style="height:4px; background:rgba(222,215,197,0.3); border-radius:2px; margin:15px 0;">
+      <div id="counterProgress" style="height:100%; background:#ded7c5; width:0%; border-radius:2px;"></div>
+    </div>
+    <div class="counter-controls">
+      <button class="counter-btn pause" id="pauseBtn" onclick="pauseCounter()" style="background:#c9a03d; color:#ffffff;">⏸ إيقاف</button>
+      <button class="counter-btn resume" id="resumeBtn" onclick="resumeCounter()" style="background:#525d63; color:#ded7c5; display:none;">▶ متابعة</button>
+      <button class="counter-btn stop" onclick="stopCounter()" style="background:#8b5e5e; color:#ffffff;">⏹ إنهاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Task Modal -->
+<div id="addTaskModal" class="modal-overlay">
+  <div class="form-modal">
+    <h3 style="margin-bottom:20px; text-align:center; color:#202028;">➕ إضافة مهمة جديدة</h3>
+    <div class="form-group">
+      <label>اسم المهمة</label>
+      <input type="text" id="newTaskName" placeholder="مثال: تصميم واجهة المستخدم">
+    </div>
+    <div class="form-group">
+      <label>الوقت المحدد</label>
+      <input type="time" id="newTaskTime">
+    </div>
+    <div class="form-group">
+      <label>المدة (دقائق)</label>
+      <input type="number" id="newTaskDuration" value="30" min="1">
+    </div>
+    <div class="form-group">
+      <label>نوع التكرار</label>
+      <div class="repeat-options">
+        <div class="repeat-option selected" data-repeat="none" onclick="selectRepeatType('none')">مرة واحدة</div>
+        <div class="repeat-option" data-repeat="weekly" onclick="selectRepeatType('weekly')">أسبوعي</div>
+      </div>
+    </div>
+    <div class="form-group" id="daySelectorGroup">
+      <label>اختر اليوم/الأيام</label>
+      <div class="days-grid" id="repeatDays">
+        <div class="day-checkbox"><label><input type="checkbox" value="0"> الأحد</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="1"> الإثنين</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="2"> الثلاثاء</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="3"> الأربعاء</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="4"> الخميس</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="5"> الجمعة</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="6"> السبت</label></div>
+      </div>
+      <div id="specificDateGroup" style="display:none; margin-top:10px;">
+        <input type="date" id="specificDate">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>وصف (اختياري)</label>
+      <textarea id="newTaskDesc" rows="2" placeholder="تفاصيل إضافية"></textarea>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-start" onclick="addNewTask()" style="flex:1;">➕ إضافة</button>
+      <button class="btn btn-delete" onclick="closeAddTaskModal()" style="flex:1;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div id="editTaskModal" class="modal-overlay">
+  <div class="form-modal">
+    <h3 style="margin-bottom:20px; text-align:center; color:#202028;">✏️ تعديل المهمة</h3>
+    <input type="hidden" id="editTaskId">
+    <div class="form-group">
+      <label>اسم المهمة</label>
+      <input type="text" id="editTaskName">
+    </div>
+    <div class="form-group">
+      <label>الوقت المحدد</label>
+      <input type="time" id="editTaskTime">
+    </div>
+    <div class="form-group">
+      <label>المدة (دقائق)</label>
+      <input type="number" id="editTaskDuration" min="1">
+    </div>
+    <div class="form-group">
+      <label>نوع التكرار</label>
+      <div class="repeat-options" id="editRepeatOptions">
+        <div class="repeat-option" data-repeat="none" onclick="selectEditRepeatType('none')">مرة واحدة</div>
+        <div class="repeat-option" data-repeat="weekly" onclick="selectEditRepeatType('weekly')">أسبوعي</div>
+      </div>
+    </div>
+    <div class="form-group" id="editDaySelectorGroup">
+      <div class="days-grid" id="editRepeatDays">
+        <div class="day-checkbox"><label><input type="checkbox" value="0"> الأحد</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="1"> الإثنين</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="2"> الثلاثاء</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="3"> الأربعاء</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="4"> الخميس</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="5"> الجمعة</label></div>
+        <div class="day-checkbox"><label><input type="checkbox" value="6"> السبت</label></div>
+      </div>
+      <div id="editSpecificDateGroup" style="display:none; margin-top:10px;">
+        <input type="date" id="editSpecificDate">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>وصف</label>
+      <textarea id="editTaskDesc" rows="2"></textarea>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-start" onclick="saveEditTask()" style="flex:1;">💾 حفظ</button>
+      <button class="btn btn-delete" onclick="closeEditTaskModal()" style="flex:1;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="notificationToast" class="notification-toast"></div>
+
+<!-- Premium Tour Guide Overlay -->
+<div id="tourOverlay" class="tour-overlay-premium"></div>
+
+<script>
+  // ==================== Data ====================
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  let taskHistory = JSON.parse(localStorage.getItem('taskHistory')) || {};
+  let streak = parseInt(localStorage.getItem('streak')) || 0;
+  let soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+  let notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
+  let backgroundNotificationsEnabled = localStorage.getItem('backgroundNotificationsEnabled') !== 'false';
+  let hasSeenTour = localStorage.getItem('hasSeenTour') === 'true';
+
+  let currentDate = new Date();
+  let selectedDate = new Date();
+  let currentMonth = new Date().getMonth();
+  let currentYear = new Date().getFullYear();
+  let repeatType = 'weekly';
+  let editRepeatType = 'weekly';
+
+  // Counter variables
+  let activeCounter = null;
+  let counterInterval = null;
+  let counterRemainingSeconds = 0;
+  let counterTotalSeconds = 0;
+  let counterPaused = false;
+  let currentRunningTaskId = null;
+
+  // Default demo tasks
+  if (tasks.length === 0) {
+      tasks = [
+          { id: 1, name: "🎨 تصميم واجهة المستخدم", time: "09:00", duration: 90, repeatType: "weekly", days: [0,1,2,3,4], specificDate: null, description: "تصميم الشاشات الرئيسية" },
+          { id: 2, name: "🧪 اختبار التطبيق", time: "11:00", duration: 60, repeatType: "weekly", days: [0,1,2,3,4], specificDate: null, description: "اختبار وظائف التطبيق" },
+          { id: 3, name: "📝 مراجعة الكود", time: "14:00", duration: 45, repeatType: "weekly", days: [0,2,4], specificDate: null, description: "مراجعة وتقييم الكود" },
+          { id: 4, name: "💬 اجتماع الفريق", time: "16:00", duration: 60, repeatType: "weekly", days: [1,3], specificDate: null, description: "مناقشة تقدم المشروع" }
+      ];
+      saveTasks();
+  }
+
+  function sortTasksByTime(arr) { return arr.sort((a,b) => a.time.localeCompare(b.time)); }
+  function getTodayKey() { return new Date().toDateString(); }
+  function getDateKey(d) { return d.toDateString(); }
+
+  function getTasksForDate(date) {
+      const dayOfWeek = date.getDay();
+      const dateStr = date.toDateString();
+      return tasks.filter(t => {
+          if (t.repeatType === 'weekly') return t.days && t.days.includes(dayOfWeek);
+          else if (t.repeatType === 'none') return t.specificDate === dateStr;
+          return false;
+      });
+  }
+
+  function getCompletedTasksForDate(date) {
+      const key = getDateKey(date);
+      return taskHistory[key]?.completed || [];
+  }
+
+  function getActualStartTimesForDate(date) {
+      const key = getDateKey(date);
+      return taskHistory[key]?.actualStartTimes || {};
+  }
+
+  function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+  function saveHistory() { localStorage.setItem('taskHistory', JSON.stringify(taskHistory)); }
+
+  function formatDelay(minutes) {
+      if (minutes <= 0) return null;
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      if (hours > 0) return `${hours} ساعة ${mins} د`;
+      return `${mins} دقيقة`;
+  }
+
+  function calculateTaskTimesWithDelay(date) {
+      let dayTasks = getTasksForDate(date);
+      dayTasks = sortTasksByTime([...dayTasks]);
+      const completedTasks = getCompletedTasksForDate(date);
+      const actualStartTimes = getActualStartTimesForDate(date);
+      let cumulativeDelay = 0;
+      let taskTimes = [];
+
+      for (let i = 0; i < dayTasks.length; i++) {
+          const task = dayTasks[i];
+          const [hours, minutes] = task.time.split(':').map(Number);
+          let scheduledTime = new Date(date);
+          scheduledTime.setHours(hours, minutes, 0);
+          let actualStartTime = null;
+          let delay = 0;
+
+          if (actualStartTimes[task.id]) {
+              actualStartTime = new Date(actualStartTimes[task.id]);
+              delay = Math.max(0, (actualStartTime - scheduledTime) / 60000);
+          }
+
+          let adjustedStartTime = new Date(scheduledTime);
+          if (actualStartTime) adjustedStartTime = actualStartTime;
+          else adjustedStartTime.setMinutes(adjustedStartTime.getMinutes() + cumulativeDelay);
+
+          taskTimes.push({
+              task, scheduledTime, actualStartTime, adjustedStartTime,
+              delay: actualStartTime ? Math.max(0, (actualStartTime - scheduledTime) / 60000) : cumulativeDelay,
+              isCompleted: completedTasks.includes(task.id),
+              hasActualStart: !!actualStartTime
+          });
+
+          if (!completedTasks.includes(task.id) && actualStartTime) cumulativeDelay += task.duration;
+          else if (completedTasks.includes(task.id) && actualStartTime) cumulativeDelay = Math.max(0, cumulativeDelay + task.duration);
+      }
+      return taskTimes;
+  }
+
+  function renderDailyTimeline() {
+      const container = document.getElementById('timelineHours');
+      const today = new Date();
+      const taskTimes = calculateTaskTimesWithDelay(today);
+      let hoursMap = {};
+      for (let i = 0; i < 24; i++) hoursMap[i] = [];
+      for (const item of taskTimes) {
+          const hour = item.scheduledTime.getHours();
+          hoursMap[hour].push(item);
+      }
+      let html = '';
+      for (let hour = 0; hour < 24; hour++) {
+          const hourTasks = hoursMap[hour];
+          html += `<div class="timeline-hour">
+              <div class="hour-label">${hour.toString().padStart(2,'0')}:00</div>
+              <div class="hour-tasks">`;
+          for (const item of hourTasks) {
+              const task = item.task;
+              html += `<div class="hour-task-badge ${item.isCompleted ? 'completed' : ''}" onclick="scrollToTask(${task.id})">${task.name}</div>`;
+          }
+          if (hourTasks.length === 0) html += `<span style="color:#525d63;">—</span>`;
+          html += `</div></div>`;
+      }
+      container.innerHTML = html;
+  }
+
+  function scrollToTask(id) {
+      const el = document.getElementById(`task-${id}`);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); switchTab('tasks'); }
+  }
+
+  function renderTasks() {
+      const container = document.getElementById('tasksList');
+      const today = new Date();
+      let taskTimes = calculateTaskTimesWithDelay(today);
+      const now = new Date();
+
+      if (taskTimes.length === 0) {
+          container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">لا توجد مهام اليوم</div><div class="empty-text">اضغط على زر + لإضافة مهمة جديدة</div></div>`;
+          updateHeaderStats();
+          return;
+      }
+
+      let html = '';
+      for (const item of taskTimes) {
+          const task = item.task;
+          const isCompleted = item.isCompleted;
+          const isDelayed = !isCompleted && now > item.adjustedStartTime;
+          const isRunning = currentRunningTaskId === task.id && !isCompleted;
+          const delayMinutes = Math.floor(item.delay);
+          let statusClass = '';
+          if (isCompleted) statusClass = 'completed';
+          else if (isDelayed) statusClass = 'delayed';
+          else if (isRunning) statusClass = 'running';
+
+          const timeStr = item.adjustedStartTime.toLocaleTimeString('ar-EG', { hour:'2-digit', minute:'2-digit' });
+
+          html += `<div class="task-card ${statusClass}" id="task-${task.id}">
+              <div class="task-header">
+                  <div class="task-name">${task.name}${isRunning ? '<span class="running-badge">▶ قيد التشغيل</span>' : ''}</div>
+                  <div class="task-time ${isDelayed ? 'delayed' : ''}">${timeStr}</div>
+              </div>
+              <div class="task-description">
+                  <span>⏱️ ${task.duration} دقيقة</span>
+                  ${delayMinutes > 0 ? `<span style="color:#c9a03d;">⚠️ تأخير ${formatDelay(delayMinutes)}</span>` : ''}
+              </div>
+              <div class="task-meta">
+                  <span>📅 ${item.scheduledTime.toLocaleTimeString('ar-EG', { hour:'2-digit', minute:'2-digit' })}</span>
+                  ${task.description ? `<span>📝 ${task.description}</span>` : ''}
+              </div>
+              <div class="task-buttons">
+                  ${!isCompleted ? `
+                      <button class="btn btn-start" onclick="startTaskWithCounter(${task.id})">▶ ابدأ</button>
+                      <button class="btn btn-complete" onclick="completeTask(${task.id})">✓ أكملت</button>
+                      <button class="btn btn-edit" onclick="openEditTaskModal(${task.id})">✎ تعديل</button>
+                  ` : `
+                      <button class="btn btn-undo" onclick="undoTask(${task.id})">↩ رجوع</button>
+                      <button class="btn btn-edit" onclick="openEditTaskModal(${task.id})">✎ تعديل</button>
+                  `}
+                  <button class="btn btn-delete" onclick="deleteTask(${task.id})">🗑 حذف</button>
+              </div>
+          </div>`;
+      }
+      container.innerHTML = html;
+      updateHeaderStats();
+      renderDailyTimeline();
+  }
+
+  function updateHeaderStats() {
+      const today = new Date();
+      const todayTasks = getTasksForDate(today);
+      const completed = getCompletedTasksForDate(today);
+      const taskTimes = calculateTaskTimesWithDelay(today);
+      const now = new Date();
+
+      let delayed = 0, inProgress = 0;
+      for (const item of taskTimes) {
+          if (!item.isCompleted && now > item.adjustedStartTime) delayed++;
+          if (!item.isCompleted && currentRunningTaskId === item.task.id) inProgress++;
+      }
+
+      document.getElementById('pendingTasksText').innerHTML = `لديك ${todayTasks.length - completed.length} مهام معلقة`;
+      document.getElementById('statCompleted').innerHTML = completed.length;
+      document.getElementById('statInProgress').innerHTML = inProgress;
+      document.getElementById('statDelayed').innerHTML = delayed;
+      document.getElementById('quickTotal').innerHTML = todayTasks.length;
+      document.getElementById('quickStreak').innerHTML = streak;
+      const rate = todayTasks.length ? Math.round((completed.length / todayTasks.length) * 100) : 0;
+      document.getElementById('quickRate').innerHTML = rate + '%';
+
+      document.getElementById('statTotalTasks').innerHTML = todayTasks.length;
+      document.getElementById('statCompletedTasks').innerHTML = completed.length;
+      document.getElementById('statDelayedTasks').innerHTML = delayed;
+      document.getElementById('statStreakCount').innerHTML = streak;
+      document.getElementById('statCompletionRate').innerHTML = rate + '%';
+      document.getElementById('statRemaining').innerHTML = todayTasks.length - completed.length;
+  }
+
+  function updateBackgroundNotification() {
+      if (!backgroundNotificationsEnabled || !activeCounter) return;
+      const minutes = Math.floor(counterRemainingSeconds / 60);
+      const seconds = counterRemainingSeconds % 60;
+      document.title = `⏱️ ${minutes}:${seconds.toString().padStart(2,'0')} - ${activeCounter.name}`;
+      if (Notification.permission === 'granted') {
+          const last = localStorage.getItem('lastBgNotifTime') || 0;
+          const now = Date.now();
+          if (now - last > 30000) {
+              new Notification('⏰ مهمة قيد التشغيل', { body: `${activeCounter.name} - متبقي ${minutes}:${seconds.toString().padStart(2,'0')}`, silent: true });
+              localStorage.setItem('lastBgNotifTime', now);
+          }
+      }
+  }
+  function resetTitle() { document.title = 'منظم المهام'; }
+
+  function startTaskWithCounter(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+      if (activeCounter && !confirm(`⚠️ "${activeCounter.name}" قيد التشغيل حالياً.\nهل تريد إنهائها والبدء بالمهمة الجديدة؟`)) return;
+
+      if (activeCounter) {
+          if (counterInterval) clearInterval(counterInterval);
+          document.getElementById('counterModal').classList.remove('active');
+          resetTitle();
+          activeCounter = null; currentRunningTaskId = null;
+      }
+
+      const today = new Date();
+      const key = getTodayKey();
+      if (!taskHistory[key]) taskHistory[key] = { completed: [], actualStartTimes: {} };
+      taskHistory[key].actualStartTimes[taskId] = new Date().toISOString();
+      saveHistory();
+
+      activeCounter = task;
+      currentRunningTaskId = taskId;
+      counterRemainingSeconds = task.duration * 60;
+      counterTotalSeconds = task.duration * 60;
+      counterPaused = false;
+
+      document.getElementById('counterTaskName').textContent = task.name;
+      document.getElementById('counterModal').classList.add('active');
+      document.getElementById('pauseBtn').style.display = 'block';
+      document.getElementById('resumeBtn').style.display = 'none';
+
+      if (counterInterval) clearInterval(counterInterval);
+      counterInterval = setInterval(() => {
+          if (!counterPaused && counterRemainingSeconds > 0) {
+              counterRemainingSeconds--;
+              const mins = Math.floor(counterRemainingSeconds / 60);
+              const secs = counterRemainingSeconds % 60;
+              document.getElementById('counterTime').textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+              const progress = ((counterTotalSeconds - counterRemainingSeconds) / counterTotalSeconds) * 100;
+              document.getElementById('counterProgress').style.width = progress + '%';
+              if (backgroundNotificationsEnabled) updateBackgroundNotification();
+
+              if (counterRemainingSeconds <= 0) {
+                  clearInterval(counterInterval);
+                  if (soundEnabled) playSound();
+                  showNotification('🎉 مبروك!', `انتهت "${activeCounter.name}" بنجاح`);
+                  resetTitle();
+                  completeTask(activeCounter.id);
+                  document.getElementById('counterModal').classList.remove('active');
+                  activeCounter = null; currentRunningTaskId = null;
+                  renderTasks();
+              }
+          }
+      }, 1000);
+
+      if (backgroundNotificationsEnabled && Notification.permission === 'default') Notification.requestPermission();
+      renderTasks();
+  }
+
+  function pauseCounter() {
+      if (activeCounter && !counterPaused) {
+          counterPaused = true;
+          document.getElementById('pauseBtn').style.display = 'none';
+          document.getElementById('resumeBtn').style.display = 'block';
+          showNotification('⏸ توقف', `تم إيقاف "${activeCounter.name}" مؤقتاً`);
+          if (backgroundNotificationsEnabled) document.title = `⏸ متوقف - ${activeCounter.name}`;
+      }
+  }
+
+  function resumeCounter() {
+      if (activeCounter && counterPaused) {
+          counterPaused = false;
+          document.getElementById('pauseBtn').style.display = 'block';
+          document.getElementById('resumeBtn').style.display = 'none';
+          showNotification('▶ متابعة', `تم استئناف "${activeCounter.name}"`);
+      }
+  }
+
+  function stopCounter() {
+      if (!activeCounter) return;
+      if (confirm(`هل تريد إنهاء "${activeCounter.name}" قبل اكتمالها؟`)) {
+          if (counterInterval) clearInterval(counterInterval);
+          document.getElementById('counterModal').classList.remove('active');
+          showNotification('⏹ تم الإنهاء', `تم إنهاء "${activeCounter.name}"`);
+          resetTitle();
+          activeCounter = null; currentRunningTaskId = null;
+          renderTasks();
+      }
+  }
+
+  function playSound() {
+      try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.frequency.value = 880;
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+          osc.start(); osc.stop(ctx.currentTime + 0.5);
+      } catch(e) {}
+  }
+
+  function completeTask(id) {
+      const today = new Date();
+      const key = getTodayKey();
+      if (!taskHistory[key]) taskHistory[key] = { completed: [], actualStartTimes: {} };
+      if (!taskHistory[key].completed.includes(id)) {
+          taskHistory[key].completed.push(id);
+          saveHistory();
+          if (soundEnabled) playSound();
+          showNotification('🎉 ممتاز!', 'تم إكمال المهمة');
+          renderTasks();
+      }
+  }
+
+  function undoTask(id) {
+      const key = getTodayKey();
+      if (taskHistory[key]) {
+          taskHistory[key].completed = taskHistory[key].completed.filter(i => i !== id);
+          saveHistory();
+          showNotification('↩️ تم', 'تم التراجع');
+          renderTasks();
+      }
+  }
+
+  function deleteTask(id) {
+      if (confirm('حذف المهمة؟')) {
+          tasks = tasks.filter(t => t.id !== id);
+          saveTasks();
+          renderTasks();
+          renderCalendar();
+          showNotification('🗑️ تم', 'تم حذف المهمة');
+      }
+  }
+
+  function openAddTaskModal() { document.getElementById('addTaskModal').classList.add('active'); }
+  function closeAddTaskModal() { document.getElementById('addTaskModal').classList.remove('active'); }
+
+  function addNewTask() {
+      const name = document.getElementById('newTaskName').value;
+      const time = document.getElementById('newTaskTime').value;
+      const duration = parseInt(document.getElementById('newTaskDuration').value);
+      const desc = document.getElementById('newTaskDesc').value;
+      if (!name || !time) { showNotification('⚠️ خطأ', 'أدخل اسم المهمة والوقت'); return; }
+
+      let days = [], specificDate = null;
+      if (repeatType === 'weekly') {
+          document.querySelectorAll('#repeatDays input:checked').forEach(cb => days.push(parseInt(cb.value)));
+          if (days.length === 0) { showNotification('⚠️ خطأ', 'اختر يوم واحد على الأقل'); return; }
+      } else {
+          const date = document.getElementById('specificDate').value;
+          if (!date) { showNotification('⚠️ خطأ', 'اختر تاريخ'); return; }
+          specificDate = new Date(date).toDateString();
+      }
+
+      const newTask = { id: Math.max(...tasks.map(t=>t.id),0)+1, name, time, duration, repeatType, days, specificDate, description: desc };
+      tasks.push(newTask);
+      sortTasksByTime(tasks);
+      saveTasks();
+      closeAddTaskModal();
+      document.getElementById('newTaskName').value = '';
+      document.getElementById('newTaskTime').value = '';
+      document.getElementById('newTaskDuration').value = '30';
+      document.getElementById('newTaskDesc').value = '';
+      document.querySelectorAll('#repeatDays input').forEach(cb => cb.checked = false);
+      renderTasks();
+      renderCalendar();
+      showNotification('✅ تم', 'تم إضافة المهمة');
+  }
+
+  function selectRepeatType(type) {
+      repeatType = type;
+      document.querySelectorAll('.repeat-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelector(`.repeat-option[data-repeat="${type}"]`).classList.add('selected');
+      if (type === 'weekly') {
+          document.getElementById('repeatDays').style.display = 'grid';
+          document.getElementById('specificDateGroup').style.display = 'none';
+      } else {
+          document.getElementById('repeatDays').style.display = 'none';
+          document.getElementById('specificDateGroup').style.display = 'block';
+      }
+  }
+
+  // Edit functions
+  function openEditTaskModal(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      document.getElementById('editTaskId').value = id;
+      document.getElementById('editTaskName').value = task.name;
+      document.getElementById('editTaskTime').value = task.time;
+      document.getElementById('editTaskDuration').value = task.duration;
+      document.getElementById('editTaskDesc').value = task.description || '';
+      editRepeatType = task.repeatType || 'weekly';
+      document.querySelectorAll('#editRepeatOptions .repeat-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelector(`#editRepeatOptions .repeat-option[data-repeat="${editRepeatType}"]`).classList.add('selected');
+      if (editRepeatType === 'weekly') {
+          document.getElementById('editRepeatDays').style.display = 'grid';
+          document.getElementById('editSpecificDateGroup').style.display = 'none';
+          document.querySelectorAll('#editRepeatDays input').forEach(cb => cb.checked = task.days && task.days.includes(parseInt(cb.value)));
+      } else {
+          document.getElementById('editRepeatDays').style.display = 'none';
+          document.getElementById('editSpecificDateGroup').style.display = 'block';
+          if (task.specificDate) {
+              const d = new Date(task.specificDate);
+              document.getElementById('editSpecificDate').value = d.toISOString().split('T')[0];
+          }
+      }
+      document.getElementById('editTaskModal').classList.add('active');
+  }
+
+  function selectEditRepeatType(type) {
+      editRepeatType = type;
+      document.querySelectorAll('#editRepeatOptions .repeat-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelector(`#editRepeatOptions .repeat-option[data-repeat="${type}"]`).classList.add('selected');
+      if (type === 'weekly') {
+          document.getElementById('editRepeatDays').style.display = 'grid';
+          document.getElementById('editSpecificDateGroup').style.display = 'none';
+      } else {
+          document.getElementById('editRepeatDays').style.display = 'none';
+          document.getElementById('editSpecificDateGroup').style.display = 'block';
+      }
+  }
+
+  function saveEditTask() {
+      const id = parseInt(document.getElementById('editTaskId').value);
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      task.name = document.getElementById('editTaskName').value;
+      task.time = document.getElementById('editTaskTime').value;
+      task.duration = parseInt(document.getElementById('editTaskDuration').value);
+      task.description = document.getElementById('editTaskDesc').value;
+      task.repeatType = editRepeatType;
+      if (editRepeatType === 'weekly') {
+          task.days = [];
+          document.querySelectorAll('#editRepeatDays input:checked').forEach(cb => task.days.push(parseInt(cb.value)));
+          task.specificDate = null;
+      } else {
+          const date = document.getElementById('editSpecificDate').value;
+          if (date) task.specificDate = new Date(date).toDateString();
+          task.days = [];
+      }
+      saveTasks();
+      sortTasksByTime(tasks);
+      closeEditTaskModal();
+      renderTasks();
+      renderCalendar();
+      showNotification('✏️ تم', 'تم تعديل المهمة');
+  }
+
+  function closeEditTaskModal() { document.getElementById('editTaskModal').classList.remove('active'); }
+
+  // Calendar
+  function renderCalendar() {
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      const lastDay = new Date(currentYear, currentMonth + 1, 0);
+      const startingDay = firstDay.getDay();
+      const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+      document.getElementById('monthYear').textContent = `${months[currentMonth]} ${currentYear}`;
+      let html = '';
+      const weekdays = ['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+      for (let i = 0; i < 7; i++) {
+          html += `<div class="calendar-weekday">${weekdays[i]}</div>`;
+      }
+      let dayCount = 1;
+      for (let i = 0; i < 42; i++) {
+          if (i < startingDay || dayCount > lastDay.getDate()) {
+              html += `<div class="calendar-day" style="opacity:0.3; background:#e0dbce;"></div>`;
+          } else {
+              const date = new Date(currentYear, currentMonth, dayCount);
+              const dayTasks = getTasksForDate(date);
+              const isSelected = selectedDate.toDateString() === date.toDateString();
+              let additionalClass = '';
+              if (isSelected) additionalClass = 'selected';
+              if (dayTasks.length > 0) additionalClass += ' has-tasks';
+              html += `<div class="calendar-day ${additionalClass}" onclick="selectDate(${currentYear},${currentMonth},${dayCount})"><div class="day-number">${dayCount}</div></div>`;
+              dayCount++;
+          }
+      }
+      document.getElementById('calendarGrid').innerHTML = html;
+
+      const tasksForSelected = getTasksForDate(selectedDate);
+      const completedSelected = getCompletedTasksForDate(selectedDate);
+      let tasksHtml = `<div style="background:#ffffff; border-radius:20px; padding:20px; margin:0 15px;"><h3 style="color:#2a353b;">📋 مهام ${selectedDate.toLocaleDateString('ar-EG')}</h3>`;
+      if (!tasksForSelected.length) tasksHtml += '<p style="color:#525d63;">لا توجد مهام</p>';
+      else tasksForSelected.forEach(t => {
+          tasksHtml += `<div style="padding:12px; border-bottom:1px solid #ded7c5;"><div style="display:flex; justify-content:space-between;"><strong style="color:#202028;">${t.name}</strong><span style="background:#ded7c5; padding:2px 8px; border-radius:20px; color:#202028;">${t.time}</span></div><div style="font-size:0.75rem; color:#525d63;">${t.description || ''}</div>${completedSelected.includes(t.id) ? '<span style="color:#2a353b;">✓ مكتملة</span>' : ''}</div>`;
+      });
+      tasksHtml += '</div>';
+      document.getElementById('selectedDayTasks').innerHTML = tasksHtml;
+  }
+
+  function selectDate(y,m,d) { selectedDate = new Date(y,m,d); renderCalendar(); }
+  function changeMonth(delta) { currentMonth += delta; if (currentMonth<0) { currentMonth=11; currentYear--; } else if (currentMonth>11) { currentMonth=0; currentYear++; } renderCalendar(); }
+
+  function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+      if (tabName === 'calendar') renderCalendar();
+      else if (tabName === 'daily') renderDailyTimeline();
+      else if (tabName === 'stats') updateHeaderStats();
+  }
+
+  function showNotification(title, msg) {
+      const toast = document.getElementById('notificationToast');
+      toast.textContent = `${title}: ${msg}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  function toggleSound() { soundEnabled = !soundEnabled; localStorage.setItem('soundEnabled', soundEnabled); document.getElementById('soundToggle').classList.toggle('active'); showNotification('🔊', soundEnabled ? 'الأصوات مفعلة' : 'الأصوات معطلة'); }
+  function toggleNotifications() { notificationsEnabled = !notificationsEnabled; localStorage.setItem('notificationsEnabled', notificationsEnabled); document.getElementById('notifToggle').classList.toggle('active'); showNotification('🔔', notificationsEnabled ? 'الإشعارات مفعلة' : 'الإشعارات معطلة'); }
+  function toggleBackgroundNotifications() { backgroundNotificationsEnabled = !backgroundNotificationsEnabled; localStorage.setItem('backgroundNotificationsEnabled', backgroundNotificationsEnabled); document.getElementById('bgNotifToggle').classList.toggle('active'); if(backgroundNotificationsEnabled && Notification.permission==='default') Notification.requestPermission(); showNotification('📱', backgroundNotificationsEnabled ? 'إشعارات الخلفية مفعلة' : 'إشعارات الخلفية معطلة'); }
+  function resetAllData() { if(confirm('حذف جميع البيانات؟')) { localStorage.clear(); location.reload(); } }
+
+  function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ar-EG');
+      const dateStr = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const timeElement = document.getElementById('currentTime');
+      const dateElement = document.getElementById('currentDate');
+      if (timeElement) timeElement.innerHTML = timeStr;
+      if (dateElement) dateElement.innerHTML = dateStr;
+  }
+
+  // ==================== PREMIUM TOUR GUIDE ====================
+  let currentTourStep = 0;
+  let isTourActive = false;
+
+  const tourData = [
+      { element: '.fab', icon: '✨', title: 'إضافة مهام جديدة', description: 'اضغط على زر + لإضافة مهمة جديدة. يمكنك تحديد الوقت والمدة ونوع التكرار (مرة واحدة أو أسبوعي).', position: 'top' },
+      { element: '.tabs .tab:first-child', icon: '📋', title: 'قائمة المهام', description: 'هنا تظهر جميع مهام اليوم. كل مهمة لها وقت محدد ويمكنك البدء فيها أو تأكيد إكمالها أو تعديلها.', position: 'bottom' },
+      { element: '.tabs .tab:nth-child(2)', icon: '📅', title: 'الجدول اليومي', description: 'شاهد جميع مهامك مرتبة على مدار الـ 24 ساعة بشكل زمني. النقر على أي مهمة ينقلك إليها.', position: 'bottom' },
+      { element: '.tabs .tab:nth-child(3)', icon: '📆', title: 'التقويم الشهري', description: 'استعراض المهام على التقويم الشهري. الأيام التي تحتوي على مهام محددة باللون الأخضر.', position: 'bottom' },
+      { element: '.tabs .tab:nth-child(4)', icon: '📊', title: 'الإحصائيات', description: 'تابع تقدمك اليومي، نسبة الإنجاز، عدد المهام المتأخرة، والأيام المتتالية.', position: 'bottom' },
+      { element: '.tabs .tab:nth-child(5)', icon: '⚙️', title: 'الإعدادات', description: 'يمكنك تشغيل/إيقاف الأصوات والإشعارات وإشعارات الخلفية.', position: 'bottom' },
+      { icon: '🎯', title: 'عداد المهام الذكي', description: 'عند الضغط على "ابدأ" في أي مهمة، يظهر عداد في منتصف الشاشة. يمكنك إيقافه مؤقتاً أو متابعته أو إنهاؤه. وعند تصغير التطبيق، ستظهر إشعارات في لوحة الإشعارات تظهر لك الوقت المتبقي!', position: 'center' }
+  ];
+
+  function createParticles(x, y) {
+      for (let i = 0; i < 20; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'tour-particle';
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 50 + Math.random() * 100;
+          const tx = Math.cos(angle) * distance;
+          const ty = Math.sin(angle) * distance;
+          particle.style.setProperty('--tx', tx + 'px');
+          particle.style.setProperty('--ty', ty + 'px');
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+          particle.style.background = `hsl(${Math.random() * 60 + 40}, 70%, 60%)`;
+          document.body.appendChild(particle);
+          setTimeout(() => particle.remove(), 2000);
+      }
+  }
+
+  function startTour() {
+      if (hasSeenTour && !localStorage.getItem('forceTour')) return;
+      isTourActive = true;
+      currentTourStep = 0;
+      const overlay = document.getElementById('tourOverlay');
+      if (overlay) overlay.classList.add('active');
+      showTourStep();
+  }
+
+  function restartTour() {
+      localStorage.setItem('forceTour', 'true');
+      hasSeenTour = false;
+      startTour();
+  }
+
+  function showTourStep() {
+      if (currentTourStep >= tourData.length) {
+          endTour();
+          return;
+      }
+
+      const step = tourData[currentTourStep];
+      const existingHighlight = document.querySelector('.tour-highlight-premium');
+      const existingTooltip = document.querySelector('.tour-tooltip-premium');
+      if (existingHighlight) existingHighlight.remove();
+      if (existingTooltip) existingTooltip.remove();
+
+      if (step.element) {
+          const targetElement = document.querySelector(step.element);
+          if (targetElement) {
+              const rect = targetElement.getBoundingClientRect();
+              const highlight = document.createElement('div');
+              highlight.className = 'tour-highlight-premium';
+              highlight.style.top = rect.top - 12 + 'px';
+              highlight.style.left = rect.left - 12 + 'px';
+              highlight.style.width = rect.width + 24 + 'px';
+              highlight.style.height = rect.height + 24 + 'px';
+              document.body.appendChild(highlight);
+
+              createParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+              let tooltipTop, tooltipLeft;
+              if (step.position === 'top') {
+                  tooltipTop = rect.top - 170;
+                  tooltipLeft = rect.left + rect.width / 2 - 150;
+              } else {
+                  tooltipTop = rect.bottom + 20;
+                  tooltipLeft = rect.left + rect.width / 2 - 150;
+              }
+
+              const tooltip = document.createElement('div');
+              tooltip.className = 'tour-tooltip-premium';
+              tooltip.style.top = Math.max(10, tooltipTop) + 'px';
+              tooltip.style.left = Math.max(10, tooltipLeft) + 'px';
+              const progressPercent = ((currentTourStep + 1) / tourData.length) * 100;
+              tooltip.innerHTML = `
+                  <div class="tour-icon-premium">${step.icon}</div>
+                  <div class="tour-title-premium">${step.title}</div>
+                  <div class="tour-description-premium">${step.description}</div>
+                  <div class="tour-progress-premium"><div class="tour-progress-fill-premium" style="width: ${progressPercent}%;"></div></div>
+                  <div class="tour-buttons-premium">
+                      <button class="tour-btn-premium tour-btn-skip-premium" onclick="endTour()">تخطى الجولة</button>
+                      <button class="tour-btn-premium tour-btn-next-premium" onclick="nextTourStep()">${currentTourStep === tourData.length - 1 ? '✨ ابدأ الرحلة ✨' : 'التالي ➜'}</button>
+                  </div>
+                  <div class="tour-dots-premium" id="tourDotsPremium"></div>
+              `;
+              document.body.appendChild(tooltip);
+
+              const dotsContainer = tooltip.querySelector('#tourDotsPremium');
+              for (let i = 0; i < tourData.length; i++) {
+                  const dot = document.createElement('div');
+                  dot.className = 'tour-dot-premium' + (i === currentTourStep ? ' active' : '');
+                  dot.onclick = (function(idx) { return function() { currentTourStep = idx; showTourStep(); }; })(i);
+                  dotsContainer.appendChild(dot);
+              }
+          } else {
+              setTimeout(showTourStep, 100);
+          }
+      } else {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'tour-tooltip-premium';
+          tooltip.style.top = '50%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translate(-50%, -50%)';
+          tooltip.style.width = '300px';
+          const progressPercent = ((currentTourStep + 1) / tourData.length) * 100;
+          tooltip.innerHTML = `
+              <div class="tour-icon-premium">${step.icon}</div>
+              <div class="tour-title-premium">${step.title}</div>
+              <div class="tour-description-premium">${step.description}</div>
+              <div class="tour-progress-premium"><div class="tour-progress-fill-premium" style="width: ${progressPercent}%;"></div></div>
+              <div class="tour-buttons-premium">
+                  <button class="tour-btn-premium tour-btn-skip-premium" onclick="endTour()">تخطى الجولة</button>
+                  <button class="tour-btn-premium tour-btn-next-premium" onclick="nextTourStep()">${currentTourStep === tourData.length - 1 ? '✨ ابدأ الرحلة ✨' : 'التالي ➜'}</button>
+              </div>
+              <div class="tour-dots-premium" id="tourDotsPremium"></div>
+          `;
+          document.body.appendChild(tooltip);
+
+          const dotsContainer = tooltip.querySelector('#tourDotsPremium');
+          for (let i = 0; i < tourData.length; i++) {
+              const dot = document.createElement('div');
+              dot.className = 'tour-dot-premium' + (i === currentTourStep ? ' active' : '');
+              dot.onclick = (function(idx) { return function() { currentTourStep = idx; showTourStep(); }; })(i);
+              dotsContainer.appendChild(dot);
+          }
+      }
+  }
+
+  function nextTourStep() {
+      currentTourStep++;
+      showTourStep();
+  }
+
+  function endTour() {
+      isTourActive = false;
+      hasSeenTour = true;
+      localStorage.setItem('hasSeenTour', 'true');
+      localStorage.removeItem('forceTour');
+      const overlay = document.getElementById('tourOverlay');
+      if (overlay) overlay.classList.remove('active');
+      const highlight = document.querySelector('.tour-highlight-premium');
+      const tooltip = document.querySelector('.tour-tooltip-premium');
+      if (highlight) highlight.remove();
+      if (tooltip) tooltip.remove();
+      showNotification('🎉 مرحباً بك!', 'ابدأ بإضافة مهامك الجديدة باستخدام زر +');
+  }
+
+  function init() {
+      updateClock();
+      setInterval(updateClock, 1000);
+      sortTasksByTime(tasks);
+      saveTasks();
+      renderTasks();
+      if(soundEnabled) document.getElementById('soundToggle').classList.add('active');
+      if(notificationsEnabled) document.getElementById('notifToggle').classList.add('active');
+      if(backgroundNotificationsEnabled) document.getElementById('bgNotifToggle').classList.add('active');
+      selectRepeatType('weekly');
+
+      // Check for new day streak update
+      const lastDate = localStorage.getItem('lastDate');
+      const todayKey = getTodayKey();
+      if (lastDate !== todayKey) {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayKey = yesterday.toDateString();
+          const yesterdayTasks = getTasksForDate(yesterday);
+          const yesterdayCompleted = getCompletedTasksForDate(yesterday);
+          const yesterdayRate = yesterdayTasks.length ? (yesterdayCompleted.length / yesterdayTasks.length) * 100 : 0;
+          if (yesterdayRate >= 70) {
+              streak++;
+              localStorage.setItem('streak', streak);
+          } else if (yesterdayRate < 30 && yesterdayTasks.length > 0) {
+              streak = 0;
+              localStorage.setItem('streak', streak);
+          }ش
+          localStorage.setItem('lastDate', todayKey);
+      }
+
+      // Start tour on first use only
+      setTimeout(function() { startTour(); }, 1000);
+  }
+  init();
+</script>
+</body>
+</html>ئش
