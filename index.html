@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reboot — انضباط حقيقي. بدون تلاعب.</title>
+<meta name="description" content="تطبيق Reboot هو أول تطبيق تتبع عادات بنظام صفري صارم + شبكة أمان الإنعاش. انضباط حقيقي، بدون كذب، بدون تلاعب.">
+<meta name="theme-color" content="#FF6B35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #FF6B35;
+    --primary-dark: #E85A24;
+    --primary-light: #FF8C42;
+    --danger: #E63946;
+    --success: #2A9D8F;
+    --warning: #F4A261;
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface-light: #1F242C;
+    --text: #F0F6FC;
+    --text-secondary: #8B949E;
+    --text-muted: #6E7681;
+    --border: #30363D;
+    --radius: 16px;
+    --radius-lg: 24px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Cairo', 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-size: 16px;
+  }
+
+  /* ============ Nav ============ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    transition: all 0.3s;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--primary);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(255, 107, 53, 0.5);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-nav {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    padding: 140px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(42, 157, 143, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.9); }
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+    animation: fadeInUp 0.6s ease-out 0.1s both;
+  }
+
+  .hero h1 .gradient-text {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 19px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    max-width: 540px;
+    line-height: 1.8;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+
+  .stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ============ Phone Mockup ============ */
+  .phone-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+  }
+
+  .phone {
+    width: 300px;
+    height: 620px;
+    background: var(--surface);
+    border-radius: 42px;
+    border: 10px solid #1a1f26;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+  }
+
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 26px;
+    background: #1a1f26;
+    border-radius: 0 0 18px 18px;
+    z-index: 3;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 16px 16px;
+    gap: 12px;
+  }
+
+  .mini-card {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mini-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 107, 53, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .mini-info {
+    flex: 1;
+  }
+
+  .mini-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .mini-meta {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .mini-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .mini-check.done {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+
+  .phone-float {
+    position: absolute;
+    padding: 12px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .phone-float.left {
+    left: -20px;
+    top: 100px;
+    animation-delay: 0.5s;
+  }
+
+  .phone-float.right {
+    right: -20px;
+    bottom: 120px;
+  }
+
+  .float-icon {
+    font-size: 22px;
+  }
+
+  .float-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .float-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* ============ Sections ============ */
+  section {
+    padding: 100px 24px;
+    position: relative;
+  }
+
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .section-eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900;
+    margin-bottom: 16px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .section-desc {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* ============ Features ============ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .feature-card:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: rgba(255, 107, 53, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 107, 53, 0.25);
+  }
+
+  .feature-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  /* ============ How It Works ============ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    position: relative;
+  }
+
+  .step {
+    text-align: center;
+    padding: 32px 20px;
+    position: relative;
+  }
+
+  .step-number {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+    border: 4px solid var(--bg);
+  }
+
+  .step-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  /* ============ Screenshots ============ */
+  .screenshots {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    padding: 20px 0 40px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .screenshots::-webkit-scrollbar {
+    display: none;
+  }
+
+  .screenshot {
+    flex: 0 0 auto;
+    width: 260px;
+    height: 540px;
+    border-radius: 28px;
+    border: 8px solid #1a1f26;
+    background: var(--surface);
+    overflow: hidden;
+    scroll-snap-align: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+    position: relative;
+  }
+
+  .screenshot:hover {
+    transform: translateY(-8px);
+  }
+
+  .screenshot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .screenshot-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .screenshot-placeholder::before {
+    content: '📱';
+    font-size: 48px;
+    opacity: 0.5;
+  }
+
+  /* ============ Quote Showcase ============ */
+  .quote-showcase {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(42, 157, 143, 0.05));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-showcase::before {
+    content: '"';
+    position: absolute;
+    top: -40px;
+    right: 30px;
+    font-size: 240px;
+    color: rgba(255, 107, 53, 0.08);
+    font-family: Georgia, serif;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quote-author {
+    font-size: 16px;
+    color: var(--primary);
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ Pricing ============ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--primary);
+    background: linear-gradient(180deg, rgba(255, 107, 53, 0.08), var(--surface));
+    transform: scale(1.02);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .pricing-name {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+  }
+
+  .pricing-price {
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .pricing-price small {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .pricing-period {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: right;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pricing-features li {
+    font-size: 15px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    text-align: center;
+  }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border-radius: var(--radius-lg);
+    padding: 72px 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(255, 107, 53, 0.35);
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cta-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-desc {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 32px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-white {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ============ Footer ============ */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 60px 24px 30px;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-top: 16px;
+    max-width: 320px;
+  }
+
+  .footer-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover {
+    color: var(--primary);
+  }
+
+  .footer-bottom {
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 900px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .phone-wrapper {
+      order: -1;
+      transform: scale(0.9);
+    }
+
+    .phone-float.left,
+    .phone-float.right {
+      display: none;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .nav-links {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    section {
+      padding: 70px 20px;
+    }
+
+    .hero {
+      padding: 120px 20px 60px;
+    }
+
+    .hero-stats {
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .footer-bottom {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .quote-showcase {
+      padding: 40px 24px;
+    }
+
+    .cta-card {
+      padding: 48px 24px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ Nav ============ -->
+<nav>
+  <div class="nav-container">
+    <a href="#" class="logo">
+      <div class="logo-icon">↻</div>
+      <span>Reboot</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">المميزات</a></li>
+      <li><a href="#how">كيف يعمل</a></li>
+      <li><a href="#screenshots">لقطات</a></li>
+      <li><a href="#pricing">الأسعار</a></li>
+    </ul>
+    <a href="#download" class="btn btn-primary btn-nav">حمّل الآن</a>
+  </div>
+</nav>
+
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>الإصدار 1.0 متوفر الآن</span>
+      </div>
+      <h1>
+        انضباط <span class="gradient-text">حقيقي</span>.<br>
+        بدون كذب، بدون تلاعب.
+      </h1>
+      <p class="hero-subtitle">
+        أول تطبيق تتبع عادات بنظام <strong>الصفرية الصارم</strong>: لو فاتك يوم، تسلسلك يتصفر فورًا. لكن مع <strong>شبكة أمان الإنعاش</strong> — فرصة تانية لاستعادة تسلسلك بتحدي 3 أيام.
+      </p>
+      <div class="hero-cta">
+        <a href="#download" class="btn btn-primary">📱 حمّل من Google Play</a>
+        <a href="#how" class="btn btn-outline">كيف يعمل؟</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <span class="stat-number">+100</span>
+          <span class="stat-label">اقتباس تحفيزي</span>
+        </div>
+        <div>
+          <span class="stat-number">3</span>
+          <span class="stat-label">أيام تحدي الإنعاش</span>
+        </div>
+        <div>
+          <span class="stat-number">2</span>
+          <span class="stat-label">لغتان (عربي/إنجليزي)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-wrapper">
+      <div class="phone-float left">
+        <span class="float-icon">🔥</span>
+        <div>
+          <div class="float-text">15 يوم</div>
+          <div class="float-sub">تسلسل حالي</div>
+        </div>
+      </div>
+
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="mini-card">
+            <div class="mini-icon">🏋️</div>
+            <div class="mini-info">
+              <div class="mini-title">تمرين يومي</div>
+              <div class="mini-meta">🔥 15 يوم</div>
+            </div>
+            <div class="mini-check done">✓</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-icon">📖</div>
+            <div class="mini-info">
+              <div class="mini-title">قراءة 10 صفحات</div>
+              <div class="mini-meta">🔥 8 أيام</div>
+            </div>
+            <div class="mini-check done">✓</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-icon">💧</div>
+            <div class="mini-info">
+              <div class="mini-title">شرب ماء</div>
+              <div class="mini-meta">🔥 3 أيام</div>
+            </div>
+            <div class="mini-check">○</div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-icon">🧘</div>
+            <div class="mini-info">
+              <div class="mini-title">تأمل</div>
+              <div class="mini-meta">🔥 22 يوم</div>
+            </div>
+            <div class="mini-check done">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone-float right">
+        <span class="float-icon">♻️</span>
+        <div>
+          <div class="float-text">إنعاش جاري</div>
+          <div class="float-sub">باقي يومان</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Features ============ -->
+<section id="features">
+  <div class="section-container">
+    <div class="section-header">
+      <div class="section-eyebrow">المميزات</div>
+      <h2 class="section-title">مميزات تجعل Reboot مختلفًا</h2>
+      <p class="section-desc">
+        فلسفة واحدة: الصرامة الحقيقية، بدون مساومة على الانضباط.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">نظام الصفرية الصارم</h3>
+        <p class="feature-desc">
+          لا تسامح مع التسويف. لو فاتك يوم، التسلسل يتصفر تلقائيًا. مفيش كذب على نفسك.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">♻️</div>
+        <h3 class="feature-title">شبكة أمان الإنعاش</h3>
+        <p class="feature-desc">
+          فاتك يوم وأنت عندك تسلسل 7+ أيام؟ ابدأ تحدي 3 أيام لاستعادة تسلسلك القديم.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">خريطة حرارية تفاعلية</h3>
+        <p class="feature-desc">
+          شوف تقدمك بالكامل عبر خريطة النشاط. كل يوم اجتهدت فيه بيبان بلون مختلف.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3 class="feature-title">+100 اقتباس تحفيزي</h3>
+        <p class="feature-desc">
+          كل ما تسجل عادة، هتظهر لك مقولة ملهمة من كبار المفكرين والعلماء.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3 class="feature-title">دعم كامل للعربية والإنجليزية</h3>
+        <p class="feature-desc">
+          التطبيق يكتشف لغة هاتفك تلقائيًا، ويمكنك التبديل بين اللغات بضغطة واحدة.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">خصوصية مطلقة</h3>
+        <p class="feature-desc">
+          بياناتك محفوظة على جهازك فقط. بدون تسجيل دخول، بدون خوادم، بدون تجسس.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ How It Works ============ -->
+<section id="how" style="background: linear-gradient(180deg, var(--bg), var(--surface));">
+  <div class="section-container">
+    <div class="section-header">
+      <div class="section-eyebrow">كيف يعمل</div>
+      <h2 class="section-title">3 خطوات للانضباط الحقيقي</h2>
+      <p class="section-desc">
+        بسيط، صارم، وفعّال. ابدأ في 30 ثانية.
+      </p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3 class="step-title">اختر عادتك</h3>
+        <p class="step-desc">
+          أضف عادة جديدة بأيقونة مميزة ولون مخصص وأيام تكرار محددة.
+        </p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3 class="step-title">سجّل يوميًا</h3>
+        <p class="step-desc">
+          لما تخلص عادتك، اضغط الدائرة ✅. تسلسلك يزيد، وتظهر لك مقولة ملهمة.
+        </p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3 class="step-title">متفوّتش يوم</h3>
+        <p class="step-desc">
+          فاتك؟ التسلسل يتصفر. لكن لو كان 7+، يمكنك بدء تحدي الإنعاش لاستعادته.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Screenshots ============ -->
+<section id="screenshots">
+  <div class="section-container">
+    <div class="section-header">
+      <div class="section-eyebrow">لقطات</div>
+      <h2 class="section-title">شوف التطبيق من الداخل</h2>
+      <p class="section-desc">
+        تصميم داكن أنيق، وتفاعلات سلسة، وتجربة مستخدم ممتازة.
+      </p>
+    </div>
+
+    <div class="screenshots">
+      <div class="screenshot">
+        <div class="screenshot-placeholder">
+          <span>الشاشة الرئيسية</span>
+          <span style="font-size:11px;opacity:0.6;">ابدل هذا بـ screenshot-1.png</span>
+        </div>
+      </div>
+      <div class="screenshot">
+        <div class="screenshot-placeholder">
+          <span>إضافة عادة</span>
+          <span style="font-size:11px;opacity:0.6;">ابدل هذا بـ screenshot-2.png</span>
+        </div>
+      </div>
+      <div class="screenshot">
+        <div class="screenshot-placeholder">
+          <span>الإحصائيات</span>
+          <span style="font-size:11px;opacity:0.6;">ابدل هذا بـ screenshot-3.png</span>
+        </div>
+      </div>
+      <div class="screenshot">
+        <div class="screenshot-placeholder">
+          <span>الإنعاش</span>
+          <span style="font-size:11px;opacity:0.6;">ابدل هذا بـ screenshot-4.png</span>
+        </div>
+      </div>
+      <div class="screenshot">
+        <div class="screenshot-placeholder">
+          <span>الاقتباسات</span>
+          <span style="font-size:11px;opacity:0.6;">ابدل هذا بـ screenshot-5.png</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Quote Showcase ============ -->
+<section>
+  <div class="section-container">
+    <div class="quote-showcase">
+      <p class="quote-text">
+        «إضاعة الوقت أشد من الموت؛ لأن إضاعة الوقت تقطعك عن الله والدار الآخرة، والموت يقطعك عن الدنيا وأهلها.»
+      </p>
+      <p class="quote-author">— ابن القيم</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Pricing ============ -->
+<section id="pricing">
+  <div class="section-container">
+    <div class="section-header">
+      <div class="section-eyebrow">الأسعار</div>
+      <h2 class="section-title">خطة بسيطة وعادلة</h2>
+      <p class="section-desc">
+        ابدأ مجانًا إلى الأبد. أو افتح الإمكانيات الكاملة.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">المجانية</div>
+        <div class="pricing-price">0 <small>$</small></div>
+        <div class="pricing-period">للأبد</div>
+        <ul class="pricing-features">
+          <li>حتى 5 عادات</li>
+          <li>تسجيل يومي</li>
+          <li>خريطة حرارية أساسية</li>
+          <li>نظام الإنعاش</li>
+          <li>+100 اقتباس</li>
+          <li>إعلانات</li>
+        </ul>
+        <a href="#download" class="btn btn-outline" style="width:100%;">ابدأ مجانًا</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">الأفضل</div>
+        <div class="pricing-name">المميزة</div>
+        <div class="pricing-price">29.99 <small>$</small></div>
+        <div class="pricing-period">سنويًا · وفّر 50%</div>
+        <ul class="pricing-features">
+          <li>عادات غير محدودة</li>
+          <li>بدون إعلانات</li>
+          <li>إنعاش فوري بدون انتظار</li>
+          <li>رؤى متقدمة</li>
+          <li>نسخ احتياطي سحابي</li>
+          <li>دعم فني مميز</li>
+        </ul>
+        <a href="#download" class="btn btn-primary" style="width:100%;">🎁 جرّب 7 أيام مجانًا</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="download" class="cta-section">
+  <div class="section-container">
+    <div class="cta-card">
+      <h2 class="cta-title">جاهز تبدأ رحلتك؟</h2>
+      <p class="cta-desc">
+        حمّل Reboot الآن وابدأ أول تسلسل لك. مفيش كذب، مفيش تلاعب، بس انضباط حقيقي.
+      </p>
+      <a href="#" class="btn btn-white">📱 حمّل من Google Play</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Footer ============ -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <div class="logo-icon">↻</div>
+          <span>Reboot</span>
+        </a>
+        <p>
+          أول تطبيق تتبع عادات بنظام صفري صارم + شبكة أمان الإنعاش. انضباط حقيقي، بدون كذب.
+        </p>
+      </div>
+
+      <div>
+        <div class="footer-title">التطبيق</div>
+        <ul class="footer-links">
+          <li><a href="#features">المميزات</a></li>
+          <li><a href="#how">كيف يعمل</a></li>
+          <li><a href="#screenshots">لقطات</a></li>
+          <li><a href="#pricing">الأسعار</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">قانوني</div>
+        <ul class="footer-links">
+          <li><a href="privacy.html">سياسة الخصوصية</a></li>
+          <li><a href="terms.html">شروط الخدمة</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-title">تواصل معنا</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@reboot-app.com">support@reboot-app.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 Reboot. جميع الحقوق محفوظة.</div>
+      <div>صُنع بـ ❤️ لكل من يريد أن يصبح أفضل.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
